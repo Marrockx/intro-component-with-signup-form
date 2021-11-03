@@ -1,0 +1,158 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- displays site properly based on user's device -->
+
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="./images/favicon-32x32.png"
+		/>
+		<link rel="stylesheet" href="css/style.css" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+		/>
+		<title>Frontend Mentor | Intro component with sign up form</title>
+	</head>
+
+	<body>
+		<div class="container">
+			<div id="main">
+				<div class="description-section">
+					<h1 class="description-heading">Learn to code by watching others</h1>
+					<p class="description-text">
+						See how experienced developers solve problems in real-time. Watching
+						scripted tutorials is great, but understanding how developers think
+						is invaluable.
+					</p>
+				</div>
+				<div class="subscription-trial">
+					<button class="call-to-action-btn">
+						<span class="trial-heading"
+							><a href="#form" class="link">Try it free 7 days</a></span
+						>
+						then $20/mo. thereafter
+					</button>
+					<form
+						action=""
+						class="subscription-trial-form"
+						id="form"
+						autocomplete="on"
+					>
+						<div class="form-field">
+							<div class="form-input-box" id="fname-box">
+								<input
+									type="text"
+									placeholder="First Name"
+									class="form-input"
+									id="firstname"
+								/>
+								<div class="warning-icon" id="fname-icon">
+									<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+								</div>
+							</div>
+							<small id="fName" class="errorText"></small>
+						</div>
+						<div class="form-field">
+							<div class="form-input-box" id="lname-box">
+								<input
+									type="text"
+									placeholder="Last Name"
+									class="form-input"
+									id="lastname"
+								/>
+								<div class="warning-icon" id="lname-icon">
+									<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+								</div>
+							</div>
+							<small id="lName" class="errorText"></small>
+						</div>
+						<div class="form-field">
+							<div class="form-input-box" id="email-box">
+								<input
+									type="text"
+									placeholder="Email Address"
+									class="form-input"
+									id="email"
+									name="email"
+								/>
+								<div class="warning-icon" id="email-icon">
+									<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+								</div>
+							</div>
+							<small id="emaiL" class="errorText"></small>
+						</div>
+						<div class="form-field">
+							<div class="form-input-box" id="pwd-box">
+								<input
+									type="password"
+									placeholder="Password"
+									class="form-input"
+									id="password"
+								/>
+								<div class="warning-icon" id="pwd-icon">
+									<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+								</div>
+							</div>
+							<small id="pwd" class="errorText"></small>
+						</div>
+						<button class="claim-trial-btn" type="submit">
+							<span class="link">Claim your free trial</span>
+						</button>
+						<p class="conditions-text">
+							By clicking the button, you are agreeing to our
+							<span
+								><a href="#" class="terms-and-services"
+									>Terms and Services</a
+								></span
+							>
+						</p>
+						<span style="display: none" class="message-box"></span>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<footer class="footer-content">
+			<p class="attribution">
+				Challenge by
+				<a href="https://www.frontendmentor.io?ref=challenge" target="_blank"
+					>Frontend Mentor</a
+				>. Coded by <a href="https://github.com/Marrockx">devmariam</a>.
+			</p>
+		</footer>
+
+		<!-- JAVASCRIPT IMPORTS -->
+		<script src="js/validate.js"></script>
+
+		<!-- <script src="">
+    const inputField = document.querySelector('.form-input');
+    const messageBox = document.querySelector('.message-box');
+
+    inputField.addEventListener('input', function (event) {
+      const value = event.target.value;
+      const isValid = (inputField.validity.valid);
+
+      if (isValid) {
+        messageBox.style.display = 'none';
+        messageBox.textContent = '';
+      } else {
+        messageBox.style.display = 'block';
+        let errorMessage = '';
+        if (inputField.validity.valueMissing) {
+          errorMessage += 'The number field is required';
+        }
+        messageBox.textContent = errorMessage;
+        messageBox.style.color = 'red';
+
+      }
+    })
+  </script> -->
+	</body>
+</html>
