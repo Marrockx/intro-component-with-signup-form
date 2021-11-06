@@ -36,14 +36,27 @@ function submitHandler(evt) {
     evt.preventDefault();
 
     errorText = {
-        first_name: "First Name cannot be empty",
-        last_name: "Last Name cannot be empty",
+        first_name: {
+            empty: "First Name cannot be empty",
+            wrongFormat: {
+                less: "First Name should be greater than 2 characters",
+                greater: "First Name should be at most 12 characters"
+            },
+        },
+        last_name: {
+            empty: "Last Name cannot be empty",
+            wrongFormat: {
+                less: "Last Name should be greater than 2 characters",
+                greater: "Last Name should be at most 12 characters"
+            },
+        },
         email: {
             empty: "Email cannot be empty",
             wrongFormat: "Looks like this is not an email"
         },
         password: {
             empty: "Password cannot be empty",
+            wrongFormat: "Password should be atleast 8 alphanumeric characters, including special characters (!, @, #, $, %, ^, &, *)"
         }
     }
 
@@ -56,19 +69,13 @@ function submitHandler(evt) {
 }
 
 
+// FUNCTIONS TO DISPLAY ERROR FEEDBACK
 
 const showFirstNameError = (text) => {
-    // fNameError.appendChild.textContent = errorText.first_name;
     fNameError.innerHTML = text;
     fNameOutline.classList.add('error', 'changePadding');
     fNameErrorIcon.classList.add('invalid');
     fNameError.classList.add('invalid');
-    // fNameError.style.display = "block"
-
-    console.log(fNameError)
-
-    // hidefirstNameError();
-    fNameOutline.addEventListener("keydown", firstNameFocusHandler)
 }
 
 const showLastNameError = (text) => {
@@ -76,11 +83,6 @@ const showLastNameError = (text) => {
     lNameOutline.classList.add('error', 'changePadding');
     lNameErrorIcon.classList.add('invalid');
     lNameError.classList.add('invalid');
-
-    // hidelastNameError();
-    lNameOutline.addEventListener("keydown", lastNameFocusHandler, false)
-
-
 }
 
 const showEmailError = (text) => {
@@ -89,8 +91,6 @@ const showEmailError = (text) => {
     emailErrorIcon.classList.add('invalid');
     emailError.classList.add('invalid');
 
-    // hideEmailError();
-    emailOutline.addEventListener("keydown", emailFocusHandler)
 }
 
 const showPasswordError = (text) => {
@@ -98,12 +98,10 @@ const showPasswordError = (text) => {
     pwdOutline.classList.add('error', 'changePadding');
     pwdErrorIcon.classList.add('invalid');
     pwdError.classList.add('invalid');
-
-    // hidePasswordError();
-    pwdOutline.addEventListener("keydown", passwordFocusHandler, false)
-
-
 }
+
+
+// FUNCTIONS TO HIDE ERROR FEEDBACK ON INPUT EVENT
 
 const firstNameFocusHandler = () => {
     fNameOutline.classList.remove('error', 'changePadding');
@@ -133,55 +131,94 @@ const passwordFocusHandler = () => {
 
 }
 
+// VALIDATION FUNCTIONS - CHECK VALIDITY FORMATS
 
-const isRequired = value => value == '' ? false : true;
+const isRequired = (value) => !value ? false : true;
+
+const lowerLimit = (length, minChar = 2) => {
+    // if character is smaller than lower limit
+    if (length < minChar) {
+        return true;
+    }
+    return false;
+}
+
+// if character is less than larger limit
+const higherLimit = (length, maxChar = 12) => {
+    if (length > maxChar) {
+        return true;
+    }
+    return false;
+}
 
 const checkFirstName = () => {
-    !isRequired(firstName.value) && (
-        showFirstNameError(errorText.first_name)
-    )
-    // : hidefirstNameError()
+    const charLength = firstName.value.length;
+    if (!isRequired(firstName.value)) {
+        showFirstNameError(errorText.first_name.empty)
+    }
+    else if (lowerLimit(charLength)) {
+        showFirstNameError(errorText.first_name.wrongFormat.less);
+    }
+    else if (higherLimit(charLength)) {
+        showFirstNameError(errorText.first_name.wrongFormat.greater)
+    }
 
-
+    firstName.addEventListener("input", firstNameFocusHandler);
 
 }
 
 const checkLastName = () => {
-    !isRequired(lastName.value) && (
-        showLastNameError(errorText.last_name)
-    )
-    // : hidelastNameError()
+    const charLength = lastName.value.length;
+    if (!isRequired(lastName.value)) {
+        showLastNameError(errorText.last_name.empty)
+    }
+    else if (lowerLimit(charLength)) {
+        showLastNameError(errorText.last_name.wrongFormat.less)
+    }
+    else if (higherLimit(charLength)) {
+        showLastNameError(errorText.last_name.wrongFormat.greater)
+    }
 
+    lastName.addEventListener("input", lastNameFocusHandler);
 }
 
-function validateEmail(emailAddr) {
-    const re = /\S+@\S+\.\S+/;
 
-    // const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+function validateEmail(emailAddr) {
+    // const re = /\S+@\S+\.\S+/;
+
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(emailAddr).toLowerCase());
 }
 
 const checkEmail = () => {
-    !email.value ? showEmailError(errorText.email.empty)
-        : !(validateEmail(signUpForm.email))
-        && showEmailError(errorText.email.wrongFormat)
-    // : emailOutline.addEventListener("keydown", emailFocusHandler);
+    if (!isRequired(email.value)) {
+        showEmailError(errorText.email.empty)
+    }
+    else if (!(validateEmail(signUpForm.email.value))) {
+        showEmailError(errorText.email.wrongFormat)
+    }
+    email.addEventListener("input", emailFocusHandler);
 }
 
-// const checkPassword = () => {
-//     !pwd.value && showPasswordError(errorText.password.empty);
 
-// }
 const isPasswordSecure = (pwd) => {
     const re = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
     return re.test(pwd);
 };
 
 const checkPassword = () => {
-    !pwd.value ? showPasswordError(errorText.password.empty)
-        : !(isPasswordSecure(signUpForm.password))
-        && showPasswordError('wrong format')
+    if (!isRequired(pwd.value)) {
+        showPasswordError(errorText.password.empty)
+    }
+    else if (!(isPasswordSecure(signUpForm.password.value))) {
+        {
 
+            showPasswordError(errorText.password.wrongFormat)
+        }
+        pwd.addEventListener("input", passwordFocusHandler);
+
+    }
 }
 
 const debounce = (fn, delay = 500) => {
@@ -212,52 +249,3 @@ form.addEventListener('input', debounce(function (e) {
     }
 }));
 
-
-// formInput.addEventListener("mouseover", evt => {
-//     if (evt.formInput == 0) {
-//         firstNameFocusHandler;
-//     }
-//     else if (evt.formInput == 1) {
-//         lastNameFocusHandler
-//     }
-
-
-// })
-
-// const hidefirstNameError = ([value]) => {
-//     displayTimeInMs = 6000;
-//     value = firstName.value
-//     setTimeout(() => {
-//         fNameError.remove(), displayTimeInMs
-//     });
-//     setTimeout(() => fNameOutline.classList.remove('error', 'changePadding'), displayTimeInMs);
-//     setTimeout(() => fNameErrorIcon.classList.remove('invalid'), displayTimeInMs);
-// }
-
-// const hidelastNameError = () => {
-//     displayTimeInMs = 6000;
-//     setTimeout(() => {
-//         lNameError.remove(), displayTimeInMs
-//     });
-//     setTimeout(() => lNameOutline.classList.remove('error', 'changePadding'), displayTimeInMs);
-//     setTimeout(() => lNameErrorIcon.classList.remove('invalid'), displayTimeInMs);
-// }
-
-// const hideEmailError = () => {
-//     displayTimeInMs = 6000;
-//     setTimeout(() => {
-//         emailError.remove(), displayTimeInMs
-//     });
-//     setTimeout(() => emailOutline.classList.remove('error', 'changePadding'), displayTimeInMs);
-//     setTimeout(() => emailErrorIcon.classList.remove('invalid'), displayTimeInMs);
-// }
-
-// const hidePasswordError = () => {
-//     displayTimeInMs = 6000;
-//     setTimeout(() => {
-//         pwdError.remove(), displayTimeInMs
-//     });
-//     setTimeout(() => pwdOutline.classList.remove('error', 'changePadding'), displayTimeInMs);
-//     setTimeout(() => pwdErrorIcon.classList.remove('invalid'), displayTimeInMs);
-
-// }
