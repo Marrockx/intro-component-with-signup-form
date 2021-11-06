@@ -40,14 +40,16 @@ function submitHandler(evt) {
             empty: "First Name cannot be empty",
             wrongFormat: {
                 less: "First Name should be greater than 2 characters",
-                greater: "First Name should be at most 12 characters"
+                greater: "First Name should be at most 12 characters",
+                input_type: "First Name should only contain alphabets"
             },
         },
         last_name: {
             empty: "Last Name cannot be empty",
             wrongFormat: {
                 less: "Last Name should be greater than 2 characters",
-                greater: "Last Name should be at most 12 characters"
+                greater: "Last Name should be at most 12 characters",
+                input_type: "Last Name should only contain alphabets"
             },
         },
         email: {
@@ -151,9 +153,14 @@ const higherLimit = (length, maxChar = 12) => {
     return false;
 }
 
+function onlyAlphabets(name) {
+    const letters = /^[A-Za-z]+$/;
+    return letters.test(String(name.value.trim()).toLowerCase());
+}
+
 const checkFirstName = () => {
     const charLength = firstName.value.length;
-    if (!isRequired(firstName.value)) {
+    if (!isRequired(firstName.value.trim())) {
         showFirstNameError(errorText.first_name.empty)
     }
     else if (lowerLimit(charLength)) {
@@ -162,6 +169,9 @@ const checkFirstName = () => {
     else if (higherLimit(charLength)) {
         showFirstNameError(errorText.first_name.wrongFormat.greater)
     }
+    else if (!(onlyAlphabets(firstName))) {
+        showFirstNameError(errorText.first_name.wrongFormat.input_type);
+    }
 
     firstName.addEventListener("input", firstNameFocusHandler);
 
@@ -169,7 +179,7 @@ const checkFirstName = () => {
 
 const checkLastName = () => {
     const charLength = lastName.value.length;
-    if (!isRequired(lastName.value)) {
+    if (!isRequired(lastName.value.trim())) {
         showLastNameError(errorText.last_name.empty)
     }
     else if (lowerLimit(charLength)) {
@@ -177,6 +187,9 @@ const checkLastName = () => {
     }
     else if (higherLimit(charLength)) {
         showLastNameError(errorText.last_name.wrongFormat.greater)
+    }
+    else if (!(onlyAlphabets(lastName))) {
+        showLastNameError(errorText.last_name.wrongFormat.input_type);
     }
 
     lastName.addEventListener("input", lastNameFocusHandler);
@@ -192,10 +205,10 @@ function validateEmail(emailAddr) {
 }
 
 const checkEmail = () => {
-    if (!isRequired(email.value)) {
+    if (!isRequired(email.value.trim())) {
         showEmailError(errorText.email.empty)
     }
-    else if (!(validateEmail(signUpForm.email.value))) {
+    else if (!(validateEmail(signUpForm.email.value.trim()))) {
         showEmailError(errorText.email.wrongFormat)
     }
     email.addEventListener("input", emailFocusHandler);
@@ -208,10 +221,10 @@ const isPasswordSecure = (pwd) => {
 };
 
 const checkPassword = () => {
-    if (!isRequired(pwd.value)) {
+    if (!isRequired(pwd.value.trim())) {
         showPasswordError(errorText.password.empty)
     }
-    else if (!(isPasswordSecure(signUpForm.password.value))) {
+    else if (!(isPasswordSecure(signUpForm.password.value.trim()))) {
         {
 
             showPasswordError(errorText.password.wrongFormat)
@@ -221,7 +234,7 @@ const checkPassword = () => {
     }
 }
 
-const debounce = (fn, delay = 500) => {
+const debounce = (fn, delay = 600) => {
     let timeoutId;
     return (...args) => {
         // cancel the previous timer
